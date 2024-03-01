@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  mariadb:
+    image: mariadb:latest
+    volumes:
+        - ./data/mysql/:/var/lib/mysql
+    environment:
+        - MARIADB_ROOT_PASSWORD=passowrd
+        - MARIADB_DATABASE=cpg_db
+        - MARIADB_USER=cpg_user
+  cpg:
+    build: .
+    environment:
+        - BASH_MODE=set -e
+    depends_on:
+        - mariadb
+    volumes:
+        - ./data/cpg:/var/www
+        - ./data/var/log:/var/log
+        - ./data/var/log/cpg:/var/log/nginx
+    ports:
+        - "9999:80"
+    hostname: cpg
+    domainname: MYDOMAIN.COM
